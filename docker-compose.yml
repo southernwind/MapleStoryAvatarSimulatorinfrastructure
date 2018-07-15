@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+    nginx:
+        depends_on: 
+            - mariadb
+            - aspnet
+        build: ./nginx
+        ports: 
+            - 80:80
+        volumes: 
+            - ./data/nginx:/var/www/html
+            - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./logs/nginx:/var/log/nginx
+        links: 
+            - mariadb
+            - aspnet
+    mariadb:
+        build: ./mariadb
+        ports: 
+            - 3306:3306
+        environment:
+            - MYSQL_ROOT_PASSWORD
+        volumes: 
+            - ./data/mariadb:/var/lib/mysql
+    aspnet:
+        build: ./aspnet
+        ports: 
+            - 54197:54197
+        volumes: 
+            - ./data/aspnet/MapleStoryAvatarSimulator/:/home/aspnet
+            - ./logs/aspnet:/aspnet/logs
